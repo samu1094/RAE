@@ -1,0 +1,26 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.hero {
+    background: #0C6E3E;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+footer {
+    background: #212529;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.custom-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.custom-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}

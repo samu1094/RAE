@@ -1,0 +1,32 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: penas6422@gmail.com        
+    password: password          
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ras
+    username: root
+    password:                       
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none  
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL8Dialect  
+    format_sql: true
+    show-sql: true

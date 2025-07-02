@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Centros</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+</head>
+<body>
+    <h1>Lista de Centros</h1>
+
+    <a href="/centros/crear">Crear Nuevo Ambiente</a>
+    <br><br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre Centro</th>
+                <th>Direccion</th>
+                <th>Ciudad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="centro : ${centros}">
+                <td th:text="${centro.cod_centro}">Id</td>
+                <td th:text="${centro.nom_centro}">Nombre</td>
+                <td th:text="${centro.direccion_centro}">Capacidad</td>
+                <td th:text="${centro.ciudad_centro}">Piso</td>
+                <a th:href="@{/centros/editar/{id}(id=${centro.cod_centro})}">Editar</a>
+|
+                    <a th:href="@{/centros/eliminar/{id}(id=${centro.cod_centro})}" onclick="return confirm('¿Estás seguro de eliminar?');">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

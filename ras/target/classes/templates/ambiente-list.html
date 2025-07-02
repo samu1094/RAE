@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Ambientes</title>
+    <link rel="stylesheet" href="/css/style.css"> 
+</head>
+<body>
+    <h1>Lista de Ambientes</h1>
+
+    <a href="/ambientes/crear">Crear Nuevo Ambiente</a>
+    <br><br>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Capacidad</th>
+                <th>Piso</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ambiente : ${ambientes}">
+                <td th:text="${ambiente.cod_amb}">Id</td>
+                <td th:text="${ambiente.nom_amb}">Nombre</td>
+                <td th:text="${ambiente.capacidad_amb}">Capacidad</td>
+                <td th:text="${ambiente.piso_amb}">Piso</td>
+                <a th:href="@{/ambientes/editar/{id}(id=${ambiente.cod_amb})}">Editar</a>
+|
+                    <a th:href="@{/ambientes/eliminar/{id}(id=${ambiente.cod_amb})}" onclick="return confirm('¿Estás seguro de eliminar?');">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

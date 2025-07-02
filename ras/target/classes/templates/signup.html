@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro Usuarios</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script src="/js/signup.js" defer></script>
+</head>
+<body>
+  <section>
+    <form action="/req/signup" method="post">
+
+      <h1>Registro Usuarios</h1>
+
+      <div class="inputbox">
+        <select name="tipo_docu" required style="width: 100%; height: 40px; background: transparent; border: none; font-size: 1rem; color: #000;">
+          <option value="" selected hidden>Seleccione su tipo de documento</option>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="CE">Cédula de Extranjería</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="PEP">Permiso especial de permanencia</option>
+          <option value="PPT">Permiso por protección temporal</option>
+        </select>
+      </div>
+
+      <div class="inputbox">
+        <input type="text" name="num_docu" required>
+        <label>Número de Documento</label>
+        <ion-icon name="document-text-outline"></ion-icon>
+      </div>
+
+       <div class="inputbox">
+        <input type="text" name="nomb_comple" required>
+        <label>Nombres</label>
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+
+      <div class="inputbox">
+        <input type="text" name="apelli_comple" required>
+        <label>Apellidos</label>
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+
+      <div class="inputbox">
+        <input type="text" name="telefono" required>
+        <label>Teléfono</label>
+        <ion-icon name="call-outline"></ion-icon>
+      </div>
+
+      <div class="inputbox">
+        <input type="email" name="email" required>
+        <label>Correo electrónico</label>
+        <ion-icon name="mail-outline"></ion-icon>
+      </div>
+
+      <div class="inputbox">
+        <input type="password" name="password" required>
+        <label>Contraseña</label>
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </div>
+
+      <button type="submit">Registrarse</button>
+
+      <div class="register">
+        <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+      </div>
+
+    </form>
+  </section>
+</body>
+</html>
+<script>
+  const submitButttom = document.getElementById("submit");
+  submitButttom.addEventListener('click',()=>{
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('passwordcon').value;
+    const email = document.getElementById('email').value;
+    const data ={
+      username,
+      email,
+      password
+    }
+    
+    if(password == confirmPassword){
+      const jsonData = JSON.stringify(data);
+      fetch('/req/signup', {
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+      })
+      .then(response =>{
+        
+      })
+    }
+    
+  })
+
+  
+</script>
