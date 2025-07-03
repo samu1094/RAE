@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Reserva de Ambientes - SENA</title>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet" />
+        <link rel="stylesheet" href="/css/styles.css" />
+    </head>
+    <body>
+
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h1>RAS</h1>
+                </div>
+                <ul class="nav-links">
+                    <li ><a  href="">Inicio</a></li>
+                    <li ><a  th:href="@{/ambientes}">Ambientes</a></li>
+                    <li ><a  th:href="@{/centros}">Centros</a></li>
+                    <li ><a  th:href="@{/coordinaciones}">Coordinaciones</a></li>
+                    <li ><a  th:href="@{/cargos}">Cargos</a></li>
+                    <li ><a  th:href="@{/funcionarios}">Funcionarios</a></li>
+                    <li ><a  th:href="@{/reservas}">Reservas</a></li>
+                    <li ><a  th:href="@{/calificaciones}">Calificaciones</a></li>
+                </ul>
+                <div class="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero" id="inicio">
+            <div class="hero-content">
+                <h1>Bienvenido al Sistema de Reserva de Ambientes</h1>
+                <p>Gestiona fácilmente la disponibilidad de los ambientes de
+                    formación del SENA con nuestra plataforma moderna e
+                    intuitiva.</p>
+                <a href="#reservar" class="cta-button">
+                    <i class="fas fa-calendar-plus"></i> Reservar Ahora
+                </a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 fade-in">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h4>Ver Disponibilidad</h4>
+                            <p>Consulta en tiempo real qué ambientes están
+                                disponibles según fecha y hora específica.
+                                Sistema actualizado automáticamente.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 fade-in">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h4>Hacer Reserva</h4>
+                            <p>Registra tu solicitud de reserva en minutos con
+                                nuestro formulario intuitivo y recibe
+                                confirmación inmediata.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 fade-in">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h4>Próximos Eventos</h4>
+                            <p>Mantente informado sobre los próximos eventos y
+                                actividades programadas en los diferentes
+                                ambientes de formación.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="calendar-container">
+        <div class="calendar-header">
+            <button class="nav-btn prev-btn" onclick="changeMonth(-1)">‹</button>
+            <div class="month-year" id="monthYear"></div>
+            <button class="nav-btn next-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- El calendario se genera aquí -->
+        </div>
+        
+        <div class="calendar-info">
+            <div class="selected-date" id="selectedDate">Hoy: <span id="todayDate"></span></div>
+            <div class="date-info" id="dateInfo">Selecciona una fecha para ver más información</div>
+        </div>
+    </div>
+
+    <script>
+        class Calendar {
+            constructor() {
+                this.currentDate = new Date();
+                this.selectedDate = null;
+                this.months = [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                ];
+                this.daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                this.init();
+            }
+
+            init() {
+                this.updateTodayDate();
+                this.generateCalendar();
+            }
+
+            updateTodayDate() {
+                const today = new Date();
+                const todayStr = `${today.getDate()} de ${this.months[today.getMonth()]} de ${today.getFullYear()}`;
+                document.getElementById('todayDate').textContent = todayStr;
+            }
+
+            generateCalendar() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                
+                // Actualizar encabezado
+                document.getElementById('monthYear').textContent = `${this.months[month]} ${year}`;
+                
+                // Limpiar calendario
+                const grid = document.getElementById('calendarGrid');
+                grid.innerHTML = '';
+                
+                // Crear encabezados de días
+                this.daysOfWeek.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    dayHeader.textContent = day;
+                    grid.appendChild(dayHeader);
+                });
+                
+                // Obtener primer día del mes y días totales
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const startDate = new Date(firstDay);
+                startDate.setDate(startDate.getDate() - firstDay.getDay());
+                
+                // Generar 42 días (6 semanas)
+                for (let i = 0; i < 42; i++) {
+                    const cellDate = new Date(startDate);
+                    cellDate.setDate(startDate.getDate() + i);
+                    
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'day-cell';
+                    dayCell.textContent = cellDate.getDate();
+                    
+                    // Determinar clases
+                    if (cellDate.getMonth() !== month) {
+                        dayCell.classList.add('other-month');
+                    }
+                    
+                    if (this.isToday(cellDate)) {
+                        dayCell.classList.add('today');
+                    }
+                    
+                    if (this.selectedDate && this.isSameDate(cellDate, this.selectedDate)) {
+                        dayCell.classList.add('selected');
+                    }
+                    
+                    // Agregar event listener
+                    dayCell.addEventListener('click', () => this.selectDate(cellDate));
+                    
+                    grid.appendChild(dayCell);
+                }
+            }
+
+            selectDate(date) {
+                this.selectedDate = new Date(date);
+                this.generateCalendar();
+                this.updateDateInfo(date);
+            }
+
+            updateDateInfo(date) {
+                const dateStr = `${date.getDate()} de ${this.months[date.getMonth()]} de ${date.getFullYear()}`;
+                const dayName = this.daysOfWeek[date.getDay()];
+                
+                document.getElementById('selectedDate').innerHTML = `Fecha seleccionada: <span style="font-weight: bold;">${dateStr}</span>`;
+                document.getElementById('dateInfo').textContent = `${dayName} - ${this.getDayOfYear(date)}º día del año`;
+            }
+
+            getDayOfYear(date) {
+                const start = new Date(date.getFullYear(), 0, 0);
+                const diff = date - start;
+                return Math.floor(diff / (1000 * 60 * 60 * 24));
+            }
+
+            isToday(date) {
+                const today = new Date();
+                return this.isSameDate(date, today);
+            }
+
+            isSameDate(date1, date2) {
+                return date1.getDate() === date2.getDate() &&
+                       date1.getMonth() === date2.getMonth() &&
+                       date1.getFullYear() === date2.getFullYear();
+            }
+
+            changeMonth(direction) {
+                this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+                this.generateCalendar();
+            }
+        }
+
+        // Inicializar calendario
+        const calendar = new Calendar();
+
+        // Funciones globales para los botones
+        function changeMonth(direction) {
+            calendar.changeMonth(direction);
+        }
+    </script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+        // Mobile menu toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 25px rgba(0, 0, 0, 0.15)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Load calendar function
+        function loadCalendar() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<span class="loading"></span> Cargando...';
+            button.disabled = true;
+
+            // Simulate loading
+            setTimeout(() => {
+                const calendarPlaceholder = document.querySelector('.calendar-placeholder');
+                calendarPlaceholder.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Calendario no configurado</strong><br>
+                        Para mostrar el calendario real, necesitas configurar:
+                        <ul class="mt-2 text-start">
+                            <li>Google Calendar API o similar</li>
+                            <li>Base de datos de reservas</li>
+                            <li>Sistema de autenticación</li>
+                        </ul>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        // Add hover effects to cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add click ripple effect
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('cta-button') || e.target.closest('.cta-button')) {
+                const button = e.target.classList.contains('cta-button') ? e.target : e.target.closest('.cta-button');
+                const rect = button.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    </body>
+</html>
